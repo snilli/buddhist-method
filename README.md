@@ -1,12 +1,12 @@
-# Buddhist Method — a skill for Claude
+# Buddhist Method — a Claude Code plugin
 
-A skill that encodes six Buddhist epistemic and decision-making principles as practical work disciplines for Claude (or any LLM-driven workflow). Each principle targets a specific failure mode that LLMs routinely exhibit: pattern-matching instead of verifying, patching symptoms instead of removing causes, capitulating under social pressure instead of holding to evidence.
+A Claude Code plugin that packages a skill encoding six Buddhist epistemic and decision-making principles as practical work disciplines for Claude (or any LLM-driven workflow). Each principle targets a specific failure mode that LLMs routinely exhibit: pattern-matching instead of verifying, patching symptoms instead of removing causes, capitulating under social pressure instead of holding to evidence.
 
 > 🇹🇭 อ่าน [README.th.md](README.th.md) สำหรับเวอร์ชันภาษาไทย
 
 ## What's in here
 
-A Claude skill (`SKILL.md` plus `references/`) that gives Claude a checklist for:
+A Claude Code plugin that bundles one skill (`SKILL.md` plus `references/`) giving Claude a checklist for:
 
 | Principle | What it catches |
 |-----------|-----------------|
@@ -35,42 +35,52 @@ The skill is **not** a religious framework. It does not require belief, ritual, 
 
 ## How to use
 
-### With Claude Code
+### Install as a Claude Code plugin (recommended)
 
-Paste this prompt into Claude Code — it clones the skill and wires up `~/.claude/CLAUDE.md` in one step:
+From inside Claude Code, run these two slash commands:
 
 ```
-Install the buddhist-method skill:
-1. Run: git clone https://github.com/nai0om/buddhist-method ~/.claude/skills/buddhist-method
-2. Open ~/.claude/CLAUDE.md (create it if it does not exist) and append:
-
-## Working method
-For tasks involving factual claims, debugging, user pushback,
-or long multi-step work, consult the buddhist-method skill at
-~/.claude/skills/buddhist-method/SKILL.md before responding.
+/plugin marketplace add snilli/buddhist-method
+/plugin install buddhist-method@buddhist-method
 ```
 
-After that, Claude Code references the skill automatically across all sessions.
+The first command registers this repo as a one-plugin marketplace. The second installs the plugin from it. After install, Claude Code auto-discovers the skill — the description in `SKILL.md` is enough for Claude to know when to load the full body, so there is nothing to wire up by hand.
+
+To remove later: `/plugin uninstall buddhist-method@buddhist-method`.
+
+### Install locally without the marketplace
+
+If you want to hack on the plugin or pin it to a specific clone:
+
+```bash
+git clone https://github.com/snilli/buddhist-method ~/path/to/buddhist-method
+```
+
+Then launch Claude Code with the plugin directory pointed at it:
+
+```bash
+claude --plugin-dir ~/path/to/buddhist-method
+```
 
 ### With other Claude products
 
-Anywhere skills are supported, drop the directory in. The structure is standard (a `SKILL.md` with YAML frontmatter, plus `references/`).
+Anywhere skills are supported, drop the `skills/buddhist-method/` directory in. The structure is standard (a `SKILL.md` with YAML frontmatter, plus `references/`).
 
 ### As a reference for yourself
 
-The `SKILL.md` and `references/` files are readable on their own. Each principle has a **trigger** (when it fires) and an **action** (what to do). You can use them as a personal checklist without involving an LLM.
+The `skills/buddhist-method/SKILL.md` and accompanying `references/` are readable on their own. Each principle has a **trigger** (when it fires) and an **action** (what to do). You can use them as a personal checklist without involving an LLM.
 
 ### Make it always active (optional)
 
-By default, Claude loads the skill on demand — it sees the description and decides whether to read the full `SKILL.md` based on the task at hand. That is fine for most uses, and it keeps your context budget free for everything else.
+By default, Claude loads the skill on demand — it sees the description from the plugin manifest and decides whether to read the full `SKILL.md` based on the task at hand. That is fine for most uses, and it keeps your context budget free for everything else.
 
 If you want the skill to be a persistent reminder regardless of task, add a small pointer to your `CLAUDE.md`:
 
 ```markdown
 ## Working method
 For tasks involving factual claims, debugging, user pushback,
-or long multi-step work, consult the buddhist-method skill at
-~/.claude/skills/buddhist-method/SKILL.md before responding.
+or long multi-step work, consult the buddhist-method skill
+before responding.
 ```
 
 Two places you can put this:
@@ -84,13 +94,18 @@ The pointer is only a few lines, so it doesn't bloat your context. Claude still 
 
 ```
 buddhist-method/
-├── SKILL.md                              # six core principles + dispatch
-├── README.md                             # this file
-├── README.th.md                          # Thai version
-├── LICENSE                               # MIT
-└── references/
-    ├── ariyasacca-debug.md               # Four Noble Truths as debug frame
-    └── extended-principles.md            # five secondary principles
+├── .claude-plugin/
+│   ├── plugin.json                      # plugin manifest
+│   └── marketplace.json                 # marketplace catalog (single-plugin repo)
+├── skills/
+│   └── buddhist-method/
+│       ├── SKILL.md                     # six core principles + dispatch
+│       └── references/
+│           ├── ariyasacca-debug.md      # Four Noble Truths as debug frame
+│           └── extended-principles.md   # five secondary principles
+├── README.md                            # this file
+├── README.th.md                         # Thai version
+└── LICENSE                              # MIT
 ```
 
 ## License

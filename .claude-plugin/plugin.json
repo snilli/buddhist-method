@@ -1,0 +1,23 @@
+{
+  "name": "buddhist-method",
+  "version": "0.1.0",
+  "description": "Six Buddhist epistemic and decision-making principles repackaged as practical work disciplines for Claude — anti-hallucination, root-cause debugging, state awareness across long tasks, willingness to discard a draft, fix vs patch discipline, and steadiness under user pushback.",
+  "author": {
+    "name": "Thiti Baipad",
+    "email": "thiti.b@ezcards.io",
+    "url": "https://github.com/snilli"
+  },
+  "homepage": "https://github.com/snilli/buddhist-method",
+  "repository": "https://github.com/snilli/buddhist-method",
+  "license": "MIT",
+  "keywords": [
+    "skill",
+    "methodology",
+    "anti-hallucination",
+    "debugging",
+    "epistemics",
+    "decision-making",
+    "work-discipline",
+    "buddhist"
+  ]
+}

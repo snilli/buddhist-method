@@ -1,12 +1,12 @@
-# Buddhist Method — skill สำหรับ Claude
+# Buddhist Method — Claude Code plugin
 
-Skill ที่นำหลักธรรมในพระพุทธศาสนา 6 ข้อ มาใช้เป็นวินัยการทำงานของ Claude (หรือ LLM อื่นๆ) แต่ละหลักจับ failure mode ที่ LLM พังบ่อย: เชื่อ pattern แทนที่จะ verify, แก้อาการแทนที่จะแก้เหตุ, ยอมตามแรงกดดันแทนที่จะดูหลักฐาน
+Claude Code plugin ที่บรรจุ skill ซึ่งนำหลักธรรมในพระพุทธศาสนา 6 ข้อ มาใช้เป็นวินัยการทำงานของ Claude (หรือ LLM อื่นๆ) แต่ละหลักจับ failure mode ที่ LLM พังบ่อย: เชื่อ pattern แทนที่จะ verify, แก้อาการแทนที่จะแก้เหตุ, ยอมตามแรงกดดันแทนที่จะดูหลักฐาน
 
 > 🇬🇧 Read [README.md](README.md) for the English version
 
 ## มีอะไรในนี้
 
-Skill (`SKILL.md` + `references/`) ที่ให้ Claude ใช้เป็น checklist:
+Claude Code plugin ที่บรรจุ skill เดียว (`SKILL.md` + `references/`) ให้ Claude ใช้เป็น checklist:
 
 | หลัก | จับ failure mode |
 |------|------------------|
@@ -35,42 +35,52 @@ skill นี้**ไม่ใช่**กรอบศาสนา ไม่ต้
 
 ## วิธีใช้
 
-### กับ Claude Code
+### ติดตั้งเป็น Claude Code plugin (แนะนำ)
 
-Paste prompt นี้ลง Claude Code — clone skill และ wiring `~/.claude/CLAUDE.md` ครั้งเดียวจบ:
+ใน Claude Code รัน slash command สองคำสั่งนี้:
 
 ```
-Install the buddhist-method skill:
-1. Run: git clone https://github.com/nai0om/buddhist-method ~/.claude/skills/buddhist-method
-2. Open ~/.claude/CLAUDE.md (create it if it does not exist) and append:
-
-## Working method
-For tasks involving factual claims, debugging, user pushback,
-or long multi-step work, consult the buddhist-method skill at
-~/.claude/skills/buddhist-method/SKILL.md before responding.
+/plugin marketplace add snilli/buddhist-method
+/plugin install buddhist-method@buddhist-method
 ```
 
-หลังจากนั้น Claude Code จะ reference skill นี้โดยอัตโนมัติทุก session
+คำสั่งแรกลงทะเบียน repo นี้เป็น marketplace (มีปลั๊กอินเดียว) คำสั่งที่สองติดตั้ง plugin จาก marketplace นั้น หลังติดตั้ง Claude Code จะ auto-discover skill เอง — description ใน `SKILL.md` พอแล้วสำหรับให้ Claude รู้ว่าเมื่อไรควรโหลด body เต็ม ไม่ต้อง wire อะไรเพิ่ม
+
+ถ้าจะถอน: `/plugin uninstall buddhist-method@buddhist-method`
+
+### ติดตั้ง local ไม่ผ่าน marketplace
+
+ถ้าอยาก hack plugin หรือใช้ clone ที่กำหนดเอง:
+
+```bash
+git clone https://github.com/snilli/buddhist-method ~/path/to/buddhist-method
+```
+
+แล้วเปิด Claude Code โดยชี้ plugin-dir ไปที่ clone นั้น:
+
+```bash
+claude --plugin-dir ~/path/to/buddhist-method
+```
 
 ### กับ Claude product อื่น
 
-ที่ไหนรองรับ skill ก็วางไฟล์ลงได้เลย โครงสร้างมาตรฐาน (`SKILL.md` มี YAML frontmatter + `references/`)
+ที่ไหนรองรับ skill ก็วาง directory `skills/buddhist-method/` ลงได้เลย โครงสร้างมาตรฐาน (`SKILL.md` มี YAML frontmatter + `references/`)
 
 ### ใช้เป็น reference เฉยๆ ก็ได้
 
-`SKILL.md` กับ `references/` อ่านเดี่ยวๆ ได้ ไม่ต้องมี Claude แต่ละหลักมี **trigger** (ใช้เมื่อไร) กับ **action** (ทำอะไร) ใช้เป็น checklist ส่วนตัวก็ได้
+`skills/buddhist-method/SKILL.md` กับ `references/` อ่านเดี่ยวๆ ได้ ไม่ต้องมี Claude แต่ละหลักมี **trigger** (ใช้เมื่อไร) กับ **action** (ทำอะไร) ใช้เป็น checklist ส่วนตัวก็ได้
 
 ### ทำให้ active ตลอด (ทางเลือก)
 
-ปกติ Claude จะโหลด skill on-demand — เห็น description แล้วตัดสินใจเองว่าจะอ่าน `SKILL.md` เต็มๆ ไหม ขึ้นกับงานตรงหน้า แบบนี้พอสำหรับการใช้งานทั่วไป และเก็บ context budget ไว้ใช้กับเรื่องอื่น
+ปกติ Claude จะโหลด skill on-demand — เห็น description จาก plugin manifest แล้วตัดสินใจเองว่าจะอ่าน `SKILL.md` เต็มๆ ไหม ขึ้นกับงานตรงหน้า แบบนี้พอสำหรับการใช้งานทั่วไป และเก็บ context budget ไว้ใช้กับเรื่องอื่น
 
 ถ้าอยากให้ skill active ตลอดไม่ว่าทำงานอะไร เพิ่ม pointer สั้นๆ ลงใน `CLAUDE.md`:
 
 ```markdown
 ## Working method
 For tasks involving factual claims, debugging, user pushback,
-or long multi-step work, consult the buddhist-method skill at
-~/.claude/skills/buddhist-method/SKILL.md before responding.
+or long multi-step work, consult the buddhist-method skill
+before responding.
 ```
 
 ใส่ได้สองที่:
@@ -84,13 +94,18 @@ Pointer สั้นแค่ไม่กี่บรรทัด ไม่ก�
 
 ```
 buddhist-method/
-├── SKILL.md                              # 6 หลัก core + dispatch
-├── README.md                             # เวอร์ชันอังกฤษ
-├── README.th.md                          # ไฟล์นี้
-├── LICENSE                               # MIT
-└── references/
-    ├── ariyasacca-debug.md               # อริยสัจ 4 เป็นกรอบ debug
-    └── extended-principles.md            # 5 หลักรอง
+├── .claude-plugin/
+│   ├── plugin.json                      # plugin manifest
+│   └── marketplace.json                 # marketplace catalog (repo มี plugin เดียว)
+├── skills/
+│   └── buddhist-method/
+│       ├── SKILL.md                     # 6 หลัก core + dispatch
+│       └── references/
+│           ├── ariyasacca-debug.md      # อริยสัจ 4 เป็นกรอบ debug
+│           └── extended-principles.md   # 5 หลักรอง
+├── README.md                            # เวอร์ชันอังกฤษ
+├── README.th.md                         # ไฟล์นี้
+└── LICENSE                              # MIT
 ```
 
 ## License
