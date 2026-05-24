@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "buddhist-method",
-      "source": ".",
+      "source": "./",
       "description": "Six Buddhist epistemic and decision-making principles repackaged as practical work disciplines for Claude — anti-hallucination, root-cause debugging, state awareness across long tasks, willingness to discard a draft, fix vs patch discipline, and steadiness under user pushback.",
       "version": "0.1.0",
       "category": "methodology",
